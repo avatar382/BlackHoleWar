@@ -10,14 +10,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
     [RequireComponent(typeof (AudioSource))]
     public class FirstPersonController : MonoBehaviour
     {
+		[SerializeField] private int m_PlayerNumber;
         [SerializeField] private bool m_IsWalking;
         [SerializeField] private float m_WalkSpeed;
         [SerializeField] private float m_RunSpeed;
         [SerializeField] [Range(0f, 1f)] private float m_RunstepLenghten;
-        [SerializeField] private float m_JumpSpeed;
+		[SerializeField] private float m_JumpSpeed;
+		[SerializeField] private float m_RotationSpeed;
         [SerializeField] private float m_StickToGroundForce;
         [SerializeField] private float m_GravityMultiplier;
-        [SerializeField] private MouseLook m_MouseLook;
+        //[SerializeField] private MouseLook m_MouseLook;
         [SerializeField] private bool m_UseFovKick;
         [SerializeField] private FOVKick m_FovKick = new FOVKick();
         [SerializeField] private bool m_UseHeadBob;
@@ -30,6 +32,8 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
         private Camera m_Camera;
         private bool m_Jump;
+		private bool m_attract;
+		private bool m_repulse;
         private float m_YRotation;
         private Vector2 m_Input;
         private Vector3 m_MoveDir = Vector3.zero;
@@ -41,6 +45,15 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_NextStep;
         private bool m_Jumping;
         private AudioSource m_AudioSource;
+
+		//Strings to differentiate player input
+		private string input_A;
+		private string input_R1;
+		private string input_L1;
+		private string input_LSTICKH;
+		private string input_LSTICKV;
+		private string input_RSTICKH;
+		private string input_RSTICKV;
 
         // Use this for initialization
         private void Start()
@@ -54,7 +67,25 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_NextStep = m_StepCycle/2f;
             m_Jumping = false;
             m_AudioSource = GetComponent<AudioSource>();
-			m_MouseLook.Init(transform , m_Camera.transform);
+			//m_MouseLook.Init(transform , m_Camera.transform);
+			//Initialize Player Number
+			if (m_PlayerNumber == 1) {
+				input_A = "P1-A";
+				input_R1 = "P1-R1";
+				input_L1 = "P1-L1";
+				input_LSTICKH = "P1-LStickHorizontal";
+				input_LSTICKV = "P1-LStickVertical";
+				input_RSTICKH = "P1-RStickHorizontal";
+				input_RSTICKV = "P1-RStickVertical";
+			} else if (m_PlayerNumber == 2) {
+				input_A = "P2-A";
+				input_R1 = "P2-R1";
+				input_L1 = "P2-L1";
+				input_LSTICKH = "P2-LStickHorizontal";
+				input_LSTICKV = "P2-LStickVertical";
+				input_RSTICKH = "P2-RStickHorizontal";
+				input_RSTICKV = "P2-RStickVertical";
+			}
         }
 
 
@@ -65,12 +96,21 @@ namespace UnityStandardAssets.Characters.FirstPerson
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
             {
-                m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+                //m_Jump = CrossPlatformInputManager.GetButtonDown("Jump");
+				m_Jump = CrossPlatformInputManager.GetButtonDown(input_A);
             }
+			if (!m_attract)
+			{
+				m_attract = CrossPlatformInputManager.GetButtonDown(input_R1);
+			}
+			if (!m_repulse)
+			{
+				m_repulse = CrossPlatformInputManager.GetButtonDown(input_L1);
+			}
 
             if (!m_PreviouslyGrounded && m_CharacterController.isGrounded)
             {
-                StartCoroutine(m_JumpBob.DoBobCycle());
+                //StartCoroutine(m_JumpBob.DoBobCycle());
                 PlayLandingSound();
                 m_MoveDir.y = 0f;
                 m_Jumping = false;
@@ -119,7 +159,21 @@ namespace UnityStandardAssets.Characters.FirstPerson
                     PlayJumpSound();
                     m_Jump = false;
                     m_Jumping = true;
-                }
+				}
+				if (m_attract)
+				{
+					//PlayJumpSound();
+					m_attract = false;
+					Debug.Log (input_R1);
+					//m_Jumping = true;
+				}
+				if (m_repulse)
+				{
+					//PlayJumpSound();
+					m_repulse = false;
+					Debug.Log (input_L1);
+					//m_Jumping = true;
+				}
             }
             else
             {
@@ -130,7 +184,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             ProgressStepCycle(speed);
             UpdateCameraPosition(speed);
 
-            m_MouseLook.UpdateCursorLock();
+            //m_MouseLook.UpdateCursorLock();
         }
 
 
@@ -184,7 +238,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 return;
             }
-            if (m_CharacterController.velocity.magnitude > 0 && m_CharacterController.isGrounded)
+            /*if (m_CharacterController.velocity.magnitude > 0 && m_CharacterController.isGrounded)
             {
                 m_Camera.transform.localPosition =
                     m_HeadBob.DoHeadBob(m_CharacterController.velocity.magnitude +
@@ -197,25 +251,27 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 newCameraPosition = m_Camera.transform.localPosition;
                 newCameraPosition.y = m_OriginalCameraPosition.y - m_JumpBob.Offset();
             }
-            m_Camera.transform.localPosition = newCameraPosition;
+            m_Camera.transform.localPosition = newCameraPosition;*/
         }
 
 
         private void GetInput(out float speed)
         {
             // Read input
-            float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
-            float vertical = CrossPlatformInputManager.GetAxis("Vertical");
+			//float horizontal = CrossPlatformInputManager.GetAxis("Horizontal");
+			//float vertical = CrossPlatformInputManager.GetAxis("Vertical");
+			float horizontal = CrossPlatformInputManager.GetAxis(input_LSTICKH);
+			float vertical = CrossPlatformInputManager.GetAxis(input_LSTICKV);
 
-            bool waswalking = m_IsWalking;
+            /*bool waswalking = m_IsWalking;
 
 #if !MOBILE_INPUT
             // On standalone builds, walk/run speed is modified by a key press.
             // keep track of whether or not the character is walking or running
-            m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
-#endif
+            //m_IsWalking = !Input.GetKey(KeyCode.LeftShift);
+#endif*/
             // set the desired speed to be walking or running
-            speed = m_IsWalking ? m_WalkSpeed : m_RunSpeed;
+			speed = m_WalkSpeed;//m_IsWalking ? m_WalkSpeed : m_RunSpeed;
             m_Input = new Vector2(horizontal, vertical);
 
             // normalize input if it exceeds 1 in combined length:
@@ -226,17 +282,36 @@ namespace UnityStandardAssets.Characters.FirstPerson
 
             // handle speed change to give an fov kick
             // only if the player is going to a run, is running and the fovkick is to be used
-            if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
+            /*if (m_IsWalking != waswalking && m_UseFovKick && m_CharacterController.velocity.sqrMagnitude > 0)
             {
                 StopAllCoroutines();
                 StartCoroutine(!m_IsWalking ? m_FovKick.FOVKickUp() : m_FovKick.FOVKickDown());
-            }
+            }*/
         }
 
-
+		/*public static float P1RHorizontal(){
+			float r = 0.0f;
+			r += Input.GetAxis ("P1-RStickHorizontal");
+			return Mathf.Clamp (r, -1.0f, 1.0f);
+		}
+		public static float P1RVertical(){
+			float r = 0.0f;
+			r += Input.GetAxis ("P1-RStickVertical");
+			return Mathf.Clamp (r, -1.0f, 1.0f);
+		}*/
         private void RotateView()
         {
-            m_MouseLook.LookRotation (transform, m_Camera.transform);
+			float new_x = m_CharacterController.transform.eulerAngles.x + Input.GetAxis (input_RSTICKV) * Time.deltaTime*m_RotationSpeed;//P1RVertical ();//;
+			//Debug.Log (new_x);
+			if (new_x > 60 && new_x < 180){
+				new_x = 60;
+			}
+			if (new_x < -60 || (new_x < 300 && new_x > 180)) {
+				new_x = -60;
+			}
+			float new_y = m_CharacterController.transform.eulerAngles.y + Input.GetAxis (input_RSTICKH)*Time.deltaTime*m_RotationSpeed;//P1RHorizontal ();//
+			m_CharacterController.transform.eulerAngles = new Vector3 (new_x, new_y, m_CharacterController.transform.eulerAngles.z);
+            //m_MouseLook.LookRotation (transform, m_Camera.transform);
         }
 
 
