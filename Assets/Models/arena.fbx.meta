@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 00aaf32f22ab56946a7c8617797038f6
-timeCreated: 1506750147
+timeCreated: 1506784739
 licenseType: Free
 ModelImporter:
   serializedVersion: 21
@@ -9,7 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: pPlane3
+    4300000: arena:Mesh
     9500000: //RootNode
   materials:
     importMaterials: 1
