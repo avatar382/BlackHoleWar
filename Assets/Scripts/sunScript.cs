@@ -55,8 +55,10 @@ public class sunScript : MonoBehaviour {
 	public void nextPhase()
 	{
 		phase++;
-		if (phase < blackHoleLevel)
+		if (phase < blackHoleLevel) {
+			Debug.Log ("material should change");
 			materialRef.DOColor (colorPhases [phase], 2);
+		}
 		else
 			blackHoleStart ();
 
