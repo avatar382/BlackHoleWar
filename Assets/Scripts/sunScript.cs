@@ -19,6 +19,8 @@ public class sunScript : MonoBehaviour {
 	public float[] lightBrightnessPhases;
 
 	public bool debugMode = false;
+	public GameObject blackHoleRef;
+	//public GameObject blackHoleLight;
 
 
 
@@ -59,7 +61,7 @@ public class sunScript : MonoBehaviour {
 	public void nextPhase()
 	{
 		phase++;
-		if (phase < blackHoleLevel) {
+		if (phase <= blackHoleLevel) {
 			Debug.Log ("material should change");
 			//gameObject.GetComponent<Renderer> ().material.color = Color.blue;
 			rendererRef.material.DOColor(colorPhases[phase], 2);
@@ -68,13 +70,17 @@ public class sunScript : MonoBehaviour {
 
 		}
 		else
+			if (blackHoleRef)
 			blackHoleStart ();
+		
 
 	}
 
 	void blackHoleStart()
 	{
-		
+		blackHoleRef.SetActive (true);
+		transform.DOScale (new Vector3 (0, 0, 0), 1.5f);
+		rendererRef.material.DOColor (Color.black, 1.5f);
 	}
 
 	void OnTriggerEnger(Collider col)
