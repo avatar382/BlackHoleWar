@@ -26,8 +26,8 @@ public class sunScript : MonoBehaviour {
 
 
 
-		materialRef = gameObject.GetComponent<Renderer> ().material; 
-		materialRef.color = colorPhases [0];
+		// materialRef = gameObject.GetComponent<Renderer> ().material; 
+		// materialRef.color = colorPhases [0];
 
 
 
@@ -58,7 +58,7 @@ public class sunScript : MonoBehaviour {
 		if (phase < blackHoleLevel) {
 			Debug.Log ("material should change");
 			gameObject.GetComponent<Renderer> ().material.color = Color.blue;
-			materialRef.DOColor (colorPhases [phase], 2);
+			// materialRef.DOColor (colorPhases [phase], 2);
 		}
 		else
 			blackHoleStart ();
