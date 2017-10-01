@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 m_EditorVersion: 2017.1.0xf3Linux
+=======
+m_EditorVersion: 2017.1.0b2
+>>>>>>> 777342be9e36dc425a4d703823b47850b76fee75
