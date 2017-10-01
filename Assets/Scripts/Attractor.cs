@@ -30,7 +30,7 @@ public class Attractor : MonoBehaviour {
 		//  Debris already exists, how about player...?
 		GameObject[] gos = GameObject.FindGameObjectsWithTag ("Attractable");
 		foreach (GameObject g in gos) {
-			if (g != this)
+			if (g != this.gameObject)
 				ApplyGravity (g);
 		}
 	}
