@@ -30,13 +30,8 @@ public class sunScript : MonoBehaviour {
 
 
 
-<<<<<<< HEAD
-		// materialRef = gameObject.GetComponent<Renderer> ().material; 
-		// materialRef.color = colorPhases [0];
-=======
 		rendererRef = gameObject.GetComponent<Renderer> ();
 		rendererRef.material.color = colorPhases [0];
->>>>>>> gabrielv4
 
 
 
