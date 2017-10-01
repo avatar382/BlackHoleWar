@@ -8,6 +8,7 @@ public class sunScript : MonoBehaviour {
 	public int sunPhase = 0;
 	public int phaseIncrement;
 	public int blackHoleLevel;
+	public Light lightRef;
 	int phase = 0;
 
 	public Material sunMaterialRef;
@@ -38,10 +39,10 @@ public class sunScript : MonoBehaviour {
 	void Update () {
 
 		rendererRef.material.SetColor ("_EmissionColor", rendererRef.material.color);
-
+		lightRef.color = rendererRef.material.color;
 		if (Input.GetKeyUp (KeyCode.Space)) {
 			if (debugMode) {
-				levelUp ();
+				nextPhase ();
 			}
 		}
 	}
@@ -62,15 +63,18 @@ public class sunScript : MonoBehaviour {
 			Debug.Log ("material should change");
 			//gameObject.GetComponent<Renderer> ().material.color = Color.blue;
 			rendererRef.material.DOColor(colorPhases[phase], 2);
+			float nextScale = sizePhases [phase];
+			transform.DOScale (new Vector3 (nextScale, nextScale, nextScale), 2);
+
 		}
 		else
 			blackHoleStart ();
-
 
 	}
 
 	void blackHoleStart()
 	{
+		
 	}
 
 	void OnTriggerEnger(Collider col)
