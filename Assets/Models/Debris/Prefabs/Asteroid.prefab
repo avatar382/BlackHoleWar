@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 114886820195049842}
   m_Layer: 0
   m_Name: Asteroid
-  m_TagString: Untagged
+  m_TagString: Debris
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -290,4 +290,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb123d76469d6437fa63adf1197b14c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debris: {fileID: 1636073913154206}
+  debris: {fileID: 1932277240114664, guid: 9f20f91015e1542dfad3204046ca8ddb, type: 2}
+  isSelected: 0
+  wasSelected: 0
