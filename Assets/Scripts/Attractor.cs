@@ -5,10 +5,11 @@ using UnityEngine;
 public class Attractor : MonoBehaviour {
 
 	//This is so that mss
-	private float mass = this.gameObject.GetComponent<Rigidbody>().mass;
+	//	public GameObject G;
+	private float mass;
 	// Use this for initialization
 	void Start () {
-		
+		mass = transform.gameObject.GetComponent<Rigidbody>().mass;
 	}
 
 	void ApplyGravity(GameObject g){
@@ -16,7 +17,7 @@ public class Attractor : MonoBehaviour {
 		Vector3 dir = rb.position - transform.position;
 		float dist = dir.magnitude;
 		float F_g = rb.mass * mass / Mathf.Pow (dist, 2f);
-		rb.AddForce (dir * 1f, ForceMode.Impulse);
+		rb.AddForce (-dir * F_g, ForceMode.Impulse);
 	}
 
 	// Update is called once per frame
@@ -29,7 +30,8 @@ public class Attractor : MonoBehaviour {
 		//  Debris already exists, how about player...?
 		GameObject[] gos = GameObject.FindGameObjectsWithTag ("Attractable");
 		foreach (GameObject g in gos) {
-			ApplyGravity (g);
+			if (g != this)
+				ApplyGravity (g);
 		}
 	}
 }
