@@ -108,17 +108,18 @@ public class VectorCone : MonoBehaviour {
 
 	void TractorMode()
 	{
-
-		if (Input.GetMouseButtonUp (0)) {
-			selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
-			selectedObject.transform.parent = null;
-			selectedObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * 1500000);
-			selectedObject = null;
-			tractorMode = false;
-
-
+		try {
+			if (Input.GetMouseButtonUp (0)) {
+				selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
+				selectedObject.transform.parent = null;
+				selectedObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * 1500000);
+				selectedObject = null;
+				tractorMode = false;
+			}
 		}
-
+		catch (MissingReferenceException e){ 
+			Debug.Log("Tried to grab a zapped rock!");
+			tractorMode = false;
+		}
 	}
-
 }
