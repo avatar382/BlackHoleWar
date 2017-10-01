@@ -10,6 +10,7 @@ public class sunScript : MonoBehaviour {
 	public int blackHoleLevel;
 	public Light lightRef;
 	int phase = 0;
+	public GameManager gm;
 
 	public Material sunMaterialRef;
 
@@ -61,6 +62,17 @@ public class sunScript : MonoBehaviour {
 	public void nextPhase()
 	{
 		phase++;
+
+		if (phase == 2) {
+			gm.playCrowd (2);
+			gm.playAnnouncer (0);
+		}
+
+		if (phase == 3) {
+			gm.playCrowd (3);
+			gm.playAnnouncer (11);
+		}
+
 		if (phase <= blackHoleLevel) {
 			//Debug.Log ("material should change");
 			//gameObject.GetComponent<Renderer> ().material.color = Color.blue;
@@ -78,6 +90,8 @@ public class sunScript : MonoBehaviour {
 
 	void blackHoleStart()
 	{
+		gm.playCrowd (2);
+		gm.playAnnouncer (2);
 		blackHoleRef.SetActive (true);
 		transform.DOScale (new Vector3 (0, 0, 0), 1.5f);
 		rendererRef.material.DOColor (Color.black, 1.5f);
