@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityStandardAssets.CrossPlatformInput;
 
-public class VectorCone : MonoBehaviour {
+public class TractorBeam : MonoBehaviour {
 
+	public int PlayerNumber;
 	public GameObject player;
 	public Camera cameraRef;
 	public ParticleSystem ps;
@@ -18,8 +20,23 @@ public class VectorCone : MonoBehaviour {
 
 	GameObject selectedObject;
 
+	private string input_R1;
+	private string input_L1;
+	private Vector3 vRay;
+
 	// Use this for initialization
 	void Start () {
+
+		if (PlayerNumber == 1) {
+			input_R1 = "P1-R1";
+			input_L1 = "P1-L1";
+			vRay = new Vector3 (Screen.width / 4, Screen.height / 2, 0);
+		} else if (PlayerNumber == 2) {
+			input_R1 = "P2-R1";
+			input_L1 = "P2-L1";
+			vRay = new Vector3 ((3 * Screen.width) / 4, Screen.height / 2, 0);
+		}
+
 	}
 
 	void iterate(Vector3 p, Vector3 dir){
@@ -36,8 +53,8 @@ public class VectorCone : MonoBehaviour {
 				minAngle = theta;
 				selected = g;
 				isSelected = true;
-//				g.gameObject.GetComponent<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
-//				g.transform.position += toTarget * 0.01f;
+				//				g.gameObject.GetComponent<Renderer>().material.color = Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+				//				g.transform.position += toTarget * 0.01f;
 			}
 		}
 		if (isSelected) {
@@ -55,7 +72,7 @@ public class VectorCone : MonoBehaviour {
 		else
 			targetMode ();
 
-		
+
 
 	}
 
@@ -72,7 +89,8 @@ public class VectorCone : MonoBehaviour {
 		}
 
 		RaycastHit hit;
-		Ray r = cameraRef.ScreenPointToRay (new Vector3 (Screen.width / 2, Screen.height / 2, 0));
+		//Ray r = cameraRef.ScreenPointToRay (new Vector3 (Screen.width / 2, Screen.height / 2, 0));
+		Ray r = cameraRef.ScreenPointToRay (vRay);
 		selectedObject = null;
 
 
@@ -81,7 +99,7 @@ public class VectorCone : MonoBehaviour {
 		//if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)), out hit, Mathf.Infinity))
 		//{
 		if (Physics.Raycast(r, out hit))
-			{
+		{
 			Debug.Log ("Something was hit! ");
 			print (hit.transform.gameObject.tag);
 			if (hit.transform.gameObject.tag == "Debris") {
@@ -94,7 +112,8 @@ public class VectorCone : MonoBehaviour {
 			}
 		}
 
-		if (Input.GetMouseButtonDown (0)) {
+		//if (Input.GetMouseButtonDown (0)) {
+		if (CrossPlatformInputManager.GetButtonDown(input_R1)) {
 			if (selectedObject != null) {
 				selectedObject.transform.parent = player.transform;
 				selectedObject.GetComponent<Debris> ().wasHit = true;
@@ -108,18 +127,29 @@ public class VectorCone : MonoBehaviour {
 
 	void TractorMode()
 	{
-		try {
-			if (Input.GetMouseButtonUp (0)) {
+		try{
+			if (CrossPlatformInputManager.GetButtonDown(input_L1)) {//FIRE OBJECT
 				selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
 				selectedObject.transform.parent = null;
 				selectedObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * 1500000);
 				selectedObject = null;
 				tractorMode = false;
+
+
 			}
-		}
-		catch (MissingReferenceException e){ 
+			if (CrossPlatformInputManager.GetButtonDown(input_R1)) {//RELEASE OBJECT
+				selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
+				selectedObject.transform.parent = null;
+				selectedObject = null;
+				tractorMode = false;
+
+
+			}
+		}catch (MissingReferenceException e){ 
 			Debug.Log("Tried to grab a zapped rock!");
 			tractorMode = false;
 		}
+
 	}
+
 }

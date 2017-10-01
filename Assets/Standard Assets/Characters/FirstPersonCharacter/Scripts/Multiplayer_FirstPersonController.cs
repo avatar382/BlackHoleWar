@@ -123,6 +123,16 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_PreviouslyGrounded = m_CharacterController.isGrounded;
         }
 
+		/*public int get_PNumber(){
+			return m_PlayerNumber;
+		}
+
+		public int pNumber {
+			get {
+				return m_PlayerNumber;
+			}
+		}*/
+
 
         private void PlayLandingSound()
         {
