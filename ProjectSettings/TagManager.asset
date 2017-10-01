@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 2
   tags:
   - Debris
+  - pl1
+  - pl2
   layers:
   - Default
   - TransparentFX
@@ -14,7 +16,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - PhyPassable
   - 
   - 
   - 

@@ -25,7 +25,7 @@ public class Debris : MonoBehaviour {
 			wasSelected = true;
 			debris.transform.position += new Vector3 (0f, 0f, speed*0.2f);
 			if (life <= 0) {
-				Destroy (debris);
+				Destroy (this.gameObject);
 			}
 			life--;
 		}
