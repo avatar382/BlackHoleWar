@@ -63,7 +63,11 @@ public class blackHoleLogic : MonoBehaviour {
 
 				Vector3 newScale = new Vector3 (transform.localScale.x * blackHoleScaleFactor, transform.localScale.y * blackHoleScaleFactor, transform.localScale.z * blackHoleScaleFactor);
 				transform.DOScale (newScale, 1); 
+
+				if (newScale.x > 752) newScale = new Vector3 (752, 752, 752);
+				
 				Destroy (Col.gameObject);
+
 				blackHoleLevel++;
 				if (blackHoleLevel == 1) {
 					gm.playCrowd (2);
