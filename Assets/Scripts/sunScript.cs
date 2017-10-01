@@ -62,7 +62,7 @@ public class sunScript : MonoBehaviour {
 	{
 		phase++;
 		if (phase <= blackHoleLevel) {
-			Debug.Log ("material should change");
+			//Debug.Log ("material should change");
 			//gameObject.GetComponent<Renderer> ().material.color = Color.blue;
 			rendererRef.material.DOColor(colorPhases[phase], 2);
 			float nextScale = sizePhases [phase];
@@ -83,9 +83,10 @@ public class sunScript : MonoBehaviour {
 		rendererRef.material.DOColor (Color.black, 1.5f);
 	}
 
-	void OnTriggerEnger(Collider col)
+	void OnTriggerEnter(Collider col)
 	{
-		if (col.tag == "debris") {
+		Debug.Log ("Triggered sun!");
+		if (col.tag == "Debris") {
 
 			levelUp ();
 			Destroy (col.gameObject);

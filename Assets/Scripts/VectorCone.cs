@@ -1,14 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class VectorCone : MonoBehaviour {
 
 	public GameObject player;
+	public Camera cameraRef;
 	public ParticleSystem ps;
 	public float maxAngle;
 	public GameObject selected;
 	public bool isSelected = false;
+	public bool tractorMode = false;
+
+	public Transform tractorPoint;
+
+
+	GameObject selectedObject;
 
 	// Use this for initialization
 	void Start () {
@@ -41,23 +49,76 @@ public class VectorCone : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+
+		if (tractorMode)
+			TractorMode ();
+		else
+			targetMode ();
+
+		
+
+	}
+
+	void targetMode()
+	{
+
 		var s = ps.shape;
 		s.angle = maxAngle;
 		Vector3 p = player.transform.position;
-		Vector3 dir = player.transform.TransformDirection(Vector3.forward);
-//		Debug.DrawRay (p, dir*40);
+		Vector3 dir = player.transform.forward;
+		//		Debug.DrawRay (p, dir*40);
 		if (!isSelected) {
-//			iterate (p, dir);
+			//			iterate (p, dir);
 		}
+
 		RaycastHit hit;
-		if ( Physics.Raycast(p, dir, out hit, 10.0f) ){
+		Ray r = cameraRef.ScreenPointToRay (new Vector3 (Screen.width / 2, Screen.height / 2, 0));
+		selectedObject = null;
+
+
+
+		//if ( Physics.Raycast(p, dir, out hit, 10000.0f) ){
+		//if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)), out hit, Mathf.Infinity))
+		//{
+		if (Physics.Raycast(r, out hit))
+			{
+			Debug.Log ("Something was hit! ");
 			print (hit.transform.gameObject.tag);
 			if (hit.transform.gameObject.tag == "Debris") {
-				GameObject go = hit.transform.gameObject;
-				go.GetComponent<Debris>().wasHit = true;
-				Rigidbody rb = go.GetComponent<Rigidbody> ();
-				rb.AddForce (dir * 1f, ForceMode.Impulse);
+
+				selectedObject = hit.transform.gameObject;
+				//GameObject go = hit.transform.gameObject;
+				//go.GetComponent<Debris>().wasHit = true;
+				//Rigidbody rb = go.GetComponent<Rigidbody> ();
+				//rb.AddForce (dir * 1f, ForceMode.Impulse);
 			}
 		}
+
+		if (Input.GetMouseButtonDown (0)) {
+			if (selectedObject != null) {
+				selectedObject.transform.parent = player.transform;
+				selectedObject.GetComponent<Debris> ().wasHit = true;
+				selectedObject.GetComponent<Rigidbody> ().isKinematic = true;
+				tractorMode = true;
+				selectedObject.transform.DOMove (tractorPoint.position, 0.2f);
+			}
+		}
+
 	}
+
+	void TractorMode()
+	{
+
+		if (Input.GetMouseButtonUp (0)) {
+			selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
+			selectedObject.transform.parent = null;
+			selectedObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * 1500000);
+			selectedObject = null;
+			tractorMode = false;
+
+
+		}
+
+	}
+
 }
