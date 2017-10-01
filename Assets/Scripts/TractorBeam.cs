@@ -22,7 +22,7 @@ public class TractorBeam : MonoBehaviour {
 
 	private string input_R1;
 	private string input_L1;
-
+	private Vector3 vRay;
 
 	// Use this for initialization
 	void Start () {
@@ -30,9 +30,11 @@ public class TractorBeam : MonoBehaviour {
 		if (PlayerNumber == 1) {
 			input_R1 = "P1-R1";
 			input_L1 = "P1-L1";
+			vRay = new Vector3 (Screen.width / 4, Screen.height / 2, 0);
 		} else if (PlayerNumber == 2) {
 			input_R1 = "P2-R1";
 			input_L1 = "P2-L1";
+			vRay = new Vector3 ((3 * Screen.width) / 4, Screen.height / 2, 0);
 		}
 
 	}
@@ -87,7 +89,8 @@ public class TractorBeam : MonoBehaviour {
 		}
 
 		RaycastHit hit;
-		Ray r = cameraRef.ScreenPointToRay (new Vector3 (Screen.width / 2, Screen.height / 2, 0));
+		//Ray r = cameraRef.ScreenPointToRay (new Vector3 (Screen.width / 2, Screen.height / 2, 0));
+		Ray r = cameraRef.ScreenPointToRay (vRay);
 		selectedObject = null;
 
 
@@ -124,23 +127,27 @@ public class TractorBeam : MonoBehaviour {
 
 	void TractorMode()
 	{
+		try{
+			if (CrossPlatformInputManager.GetButtonDown(input_L1)) {//FIRE OBJECT
+				selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
+				selectedObject.transform.parent = null;
+				selectedObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * 1500000);
+				selectedObject = null;
+				tractorMode = false;
 
-		if (CrossPlatformInputManager.GetButtonDown(input_L1)) {//FIRE OBJECT
-			selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
-			selectedObject.transform.parent = null;
-			selectedObject.GetComponent<Rigidbody> ().AddForce (player.transform.forward * 1500000);
-			selectedObject = null;
+
+			}
+			if (CrossPlatformInputManager.GetButtonDown(input_R1)) {//RELEASE OBJECT
+				selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
+				selectedObject.transform.parent = null;
+				selectedObject = null;
+				tractorMode = false;
+
+
+			}
+		}catch (MissingReferenceException e){ 
+			Debug.Log("Tried to grab a zapped rock!");
 			tractorMode = false;
-
-
-		}
-		if (CrossPlatformInputManager.GetButtonDown(input_R1)) {//RELEASE OBJECT
-			selectedObject.GetComponent<Rigidbody> ().isKinematic = false;
-			selectedObject.transform.parent = null;
-			selectedObject = null;
-			tractorMode = false;
-
-
 		}
 
 	}
