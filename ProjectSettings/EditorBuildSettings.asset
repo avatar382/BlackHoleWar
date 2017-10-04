@@ -9,5 +9,5 @@ EditorBuildSettings:
     path: Assets/TitleScreen.unity
     guid: a0d485332b6b2e64b809ccc27490e78f
   - enabled: 1
-    path: Assets/CrosshairGabrielScene.unity
-    guid: c9b5059c7f1e16448b63bbb7915d4ee3
+    path: Assets/MainScene.unity
+    guid: 96025cb0ccf7ebe4f8769496cb948548
