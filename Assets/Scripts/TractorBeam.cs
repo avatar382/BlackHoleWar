@@ -98,7 +98,8 @@ public class TractorBeam : MonoBehaviour {
 		//if ( Physics.Raycast(p, dir, out hit, 10000.0f) ){
 		//if (Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0)), out hit, Mathf.Infinity))
 		//{
-		if (Physics.Raycast(r, out hit))
+		int layerMask = ~(1 << 9);
+		if (Physics.Raycast(r, out hit, 10000, layerMask))
 		{
 			Debug.Log ("Something was hit! ");
 			print (hit.transform.gameObject.tag);
@@ -127,6 +128,10 @@ public class TractorBeam : MonoBehaviour {
 
 	void TractorMode()
 	{
+		if (selectedObject == null)
+			tractorMode = false;
+
+
 		try{
 			if (CrossPlatformInputManager.GetButtonDown(input_L1)) {//FIRE OBJECT
 				selectedObject.GetComponent<Rigidbody> ().isKinematic = false;

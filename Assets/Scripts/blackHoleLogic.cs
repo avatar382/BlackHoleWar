@@ -18,6 +18,7 @@ public class blackHoleLogic : MonoBehaviour {
 	public AudioMixer mixer;
 	public AudioMixerSnapshot[] sn;
 	public bool win = false;
+	public AudioSource blackHoleMusic;
 
 	public float blackHoleScaleFactor;
 	// Use this for initialization
@@ -41,7 +42,7 @@ public class blackHoleLogic : MonoBehaviour {
 
 	IEnumerator blackHoleAppears()
 	{
-		
+		blackHoleMusic.Play ();
 		weights [0] = 0.0f;
 		weights [1] = 1.0f;
 		mixer.TransitionToSnapshots (sn, weights, 3);

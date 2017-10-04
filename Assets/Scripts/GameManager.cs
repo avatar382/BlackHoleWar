@@ -33,6 +33,11 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		//physics
+		Physics.IgnoreLayerCollision(8, 9);
+
+
 		playCrowd (1);
 		playAnnouncer (6);
 	}

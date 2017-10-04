@@ -9,7 +9,10 @@ public class Debris : MonoBehaviour {
 	public bool wasSelected = false;
 	public bool wasHit = false;
 	private float speed;
-	private int life = 500;
+	public int life = 500;
+	public TractorBeam holder;
+	public bool beingHeld;
+
 
 	// Use this for initialization
 	void Start () {
@@ -33,6 +36,12 @@ public class Debris : MonoBehaviour {
 		else {
   			debris.GetComponent<SphereCollider> ().radius = minimumColliderRadius;
 		}
+	}
+
+	public void putInWell()
+	{
+		beingHeld = true;
+
 	}
 	
 	// Update is called once per frame
